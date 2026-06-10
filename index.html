@@ -112,14 +112,15 @@
     <p id="texto-escenario">Preparando los módulos...</p>
     
     <div id="botones-opciones">
-        </div>
+        <!-- Los botones se generarán dinámicamente aquí -->
+    </div>
 </div>
 
 <script>
     let puntuacionActual = 0;
     const puntuacionMaxima = 100; // 5 situaciones x 2 preguntas x 10 puntos
 
-    // Base de datos de escenarios estructurada secuencialmente
+    // Base de datos de escenarios estructurada secuencialmente y con opciones mezcladas
     const escenarios = {
         inicio: {
             etiqueta: "Instrucciones",
@@ -134,9 +135,9 @@
             titulo: "El Proyecto Incompleto",
             texto: "Es medianoche y el proyecto de Biología se entrega mañana. Un integrante acaba de avisar que 'se le olvidó' hacer su parte. ¿Qué decides hacer en este momento?",
             opciones: [
-                { texto: "A) Enojarse en el grupo de WhatsApp y sacarlo del equipo inmediatamente.", destino: "sit1_q2", puntos: 0 },
-                { texto: "B) Quedarte despierto hasta las 4 AM haciendo su parte para que el equipo no repruebe.", destino: "sit1_q2", puntos: 5 },
-                { texto: "C) Repartir su parte entre los demás para acabar rápido, pero acordar reportarlo al profesor mañana.", destino: "sit1_q2", puntos: 10 }
+                { texto: "A) Repartir su parte entre los demás para acabar rápido, pero acordar reportarlo al profesor mañana.", destino: "sit1_q2", puntos: 10 },
+                { texto: "B) Enojarse en el grupo de WhatsApp y sacarlo del equipo inmediatamente.", destino: "sit1_q2", puntos: 0 },
+                { texto: "C) Quedarte despierto hasta las 4 AM haciendo su parte para que el equipo no repruebe.", destino: "sit1_q2", puntos: 5 }
             ]
         },
         sit1_q2: {
@@ -144,9 +145,9 @@
             titulo: "El Día de la Presentación",
             texto: "Al día siguiente, llega el momento de exponer. El profesor hace una pregunta específica sobre la parte que le tocaba a tu compañero ausente. ¿Cómo respondes?",
             opciones: [
-                { texto: "A) Quedarte callado y dejar que el profesor asuma que nadie estudió.", destino: "sit2_q1", puntos: 0 },
-                { texto: "B) Inventar una respuesta rápida para salir del paso aunque no tenga sentido.", destino: "sit2_q1", puntos: 5 },
-                { texto: "C) Admitir profesionalmente que esa sección tuvo problemas de asignación, pero explicar lo que lograron investigar anoche.", destino: "sit2_q1", puntos: 10 }
+                { texto: "A) Inventar una respuesta rápida para salir del paso aunque no tenga sentido.", destino: "sit2_q1", puntos: 5 },
+                { texto: "B) Admitir profesionalmente que esa sección tuvo problemas de asignación, pero explicar lo que lograron investigar anoche.", destino: "sit2_q1", puntos: 10 },
+                { texto: "C) Quedarte callado y dejar que el profesor asuma que nadie estudió.", destino: "sit2_q1", puntos: 0 }
             ]
         },
 
@@ -156,9 +157,9 @@
             titulo: "El Rumor Viral",
             texto: "Ves una captura en un grupo de WhatsApp donde acusan a tu mejor amigo de hacer trampa en matemáticas. ¿Cuál es tu primera acción analítica?",
             opciones: [
-                { texto: "A) Reenviar la foto a otros amigos para ver si ellos saben algo.", destino: "sit2_q2", puntos: 0 },
-                { texto: "B) Ignorar el mensaje para no meterte en problemas ajenos.", destino: "sit2_q2", puntos: 5 },
-                { texto: "C) Escribirle a tu amigo por privado para escuchar su versión antes de juzgar.", destino: "sit2_q2", puntos: 10 }
+                { texto: "A) Ignorar el mensaje para no meterte en problemas ajenos.", destino: "sit2_q2", puntos: 5 },
+                { texto: "B) Escribirle a tu amigo por privado para escuchar su versión antes de juzgar.", destino: "sit2_q2", puntos: 10 },
+                { texto: "C) Reenviar la foto a otros amigos para ver si ellos saben algo.", destino: "sit2_q2", puntos: 0 }
             ]
         },
         sit2_q2: {
@@ -166,9 +167,9 @@
             titulo: "La Confrontación",
             texto: "Resulta que el rumor es falso. Tu amigo está furioso y quiere ir a pelear a la salida con quien envió la captura. ¿Cómo manejas esta crisis?",
             opciones: [
-                { texto: "A) Apoyarlo e ir con él a la salida para que no vaya solo.", destino: "sit3_q1", puntos: 0 },
-                { texto: "B) Decirle que se calme y simplemente irte a tu casa.", destino: "sit3_q1", puntos: 5 },
-                { texto: "C) Convencerlo de llevar las pruebas de su inocencia a Orientación Educativa para resolverlo formalmente.", destino: "sit3_q1", puntos: 10 }
+                { texto: "A) Convencerlo de llevar las pruebas de su inocencia a Orientación Educativa para resolverlo formalmente.", destino: "sit3_q1", puntos: 10 },
+                { texto: "B) Apoyarlo e ir con él a la salida para que no vaya solo.", destino: "sit3_q1", puntos: 0 },
+                { texto: "C) Decirle que se calme y simplemente irte a tu casa.", destino: "sit3_q1", puntos: 5 }
             ]
         },
 
@@ -179,8 +180,8 @@
             texto: "Tus padres quieren que elijas el área Físico-Matemática porque 'es lo que deja dinero', pero tú tienes una fuerte vocación por las Artes Visuales.",
             opciones: [
                 { texto: "A) Elegir Físico-Matemático para evitar que te regañen en casa.", destino: "sit3_q2", puntos: 0 },
-                { texto: "B) Elegir Artes y ocultarles la hoja de inscripción hasta que ya no haya vuelta atrás.", destino: "sit3_q2", puntos: 5 },
-                { texto: "C) Buscar carreras que combinen ambos intereses (ej. Animación Digital) y presentarles un plan de estudios.", destino: "sit3_q2", puntos: 10 }
+                { texto: "B) Buscar carreras que combinen ambos intereses (ej. Animación Digital) y presentarles un plan de estudios.", destino: "sit3_q2", puntos: 10 },
+                { texto: "C) Elegir Artes y ocultarles la hoja de inscripción hasta que ya no haya vuelta atrás.", destino: "sit3_q2", puntos: 5 }
             ]
         },
         sit3_q2: {
@@ -188,9 +189,9 @@
             titulo: "La Presión del Orientador",
             texto: "El orientador te dice que las áreas de Artes se están llenando y debes firmar hoy mismo, pero aún no has hablado con tus padres. ¿Qué haces?",
             opciones: [
-                { texto: "A) Firmar rápido por pánico y luego ver cómo le explicas a tus papás.", destino: "sit4_q1", puntos: 0 },
-                { texto: "B) Falsificar la firma de tus papás para asegurar tu lugar en Artes.", destino: "sit4_q1", puntos: 0 },
-                { texto: "C) Pedirle al orientador una extensión de 24 horas y agendar una cita de urgencia entre él, tus padres y tú.", destino: "sit4_q1", puntos: 10 }
+                { texto: "A) Falsificar la firma de tus papás para asegurar tu lugar en Artes.", destino: "sit4_q1", puntos: 0 },
+                { texto: "B) Pedirle al orientador una extensión de 24 horas y agendar una cita de urgencia entre él, tus padres y tú.", destino: "sit4_q1", puntos: 10 },
+                { texto: "C) Firmar rápido por pánico y luego ver cómo le explicas a tus papás.", destino: "sit4_q1", puntos: 0 }
             ]
         },
 
@@ -200,9 +201,9 @@
             titulo: "Fiesta vs Examen",
             texto: "Es jueves en la tarde. Tienes un examen vital de Historia mañana temprano, pero el chico/chica que te gusta te invitó a una fiesta hoy.",
             opciones: [
-                { texto: "A) Ir a la fiesta y confiar en que podrás improvisar en el examen.", destino: "sit4_q2", puntos: 0 },
+                { texto: "A) Aplicar la técnica Pomodoro para estudiar intensamente 3 horas, ir a la fiesta un rato y regresar temprano.", destino: "sit4_q2", puntos: 10 },
                 { texto: "B) Quedarte a estudiar, pero pasar toda la noche distraído en el celular lamentando no haber ido.", destino: "sit4_q2", puntos: 5 },
-                { texto: "C) Aplicar la técnica Pomodoro para estudiar intensamente 3 horas, ir a la fiesta un rato y regresar temprano.", destino: "sit4_q2", puntos: 10 }
+                { texto: "C) Ir a la fiesta y confiar en que podrás improvisar en el examen.", destino: "sit4_q2", puntos: 0 }
             ]
         },
         sit4_q2: {
@@ -210,9 +211,9 @@
             titulo: "La Pregunta Sorpresa",
             texto: "Estás en el examen de Historia y la última pregunta vale 30% de la calificación. Es sobre un tema que el profesor mencionó, pero no venía en el libro.",
             opciones: [
-                { texto: "A) Intentar copiarle discretamente al compañero de al lado.", destino: "sit5_q1", puntos: 0 },
-                { texto: "B) Dejarla en blanco y entregar el examen rápido para salir ya.", destino: "sit5_q1", puntos: 5 },
-                { texto: "C) Escribir todo lo que recuerdas del contexto histórico e intentar deducir una respuesta lógica.", destino: "sit5_q1", puntos: 10 }
+                { texto: "A) Dejarla en blanco y entregar el examen rápido para salir ya.", destino: "sit5_q1", puntos: 5 },
+                { texto: "B) Escribir todo lo que recuerdas del contexto histórico e intentar deducir una respuesta lógica.", destino: "sit5_q1", puntos: 10 },
+                { texto: "C) Intentar copiarle discretamente al compañero de al lado.", destino: "sit5_q1", puntos: 0 }
             ]
         },
 
@@ -222,8 +223,8 @@
             titulo: "La Tesorería del Salón",
             texto: "Eres el tesorero. Faltan $2,000 pesos para el viaje de graduación. Un compañero popular sugiere meter el dinero en una app de apuestas deportivas para 'duplicarlo rápido'.",
             opciones: [
-                { texto: "A) Aceptar para no quedar como 'aburrido' frente al salón.", destino: "sit5_q2", puntos: 0 },
-                { texto: "B) Negarte, pero poner de tus propios ahorros lo que falta para que dejen de molestar.", destino: "sit5_q2", puntos: 5 },
+                { texto: "A) Negarte, pero poner de tus propios ahorros lo que falta para que dejen de molestar.", destino: "sit5_q2", puntos: 5 },
+                { texto: "B) Aceptar para no quedar como 'aburrido' frente al salón.", destino: "sit5_q2", puntos: 0 },
                 { texto: "C) Rechazar la idea con firmeza explicando el riesgo matemático y proponer organizar una venta de comida.", destino: "sit5_q2", puntos: 10 }
             ]
         },
@@ -232,9 +233,9 @@
             titulo: "El Boicot",
             texto: "Como no quisiste apostar, el grupo de compañeros se enoja y empieza a decir que el viaje fracasará por tu culpa, poniéndote al salón en contra.",
             opciones: [
-                { texto: "A) Renunciar a ser tesorero, aventarles el dinero y que ellos lo resuelvan.", destino: "evaluacion", puntos: 0 },
+                { texto: "A) Mostrarle al salón un archivo de Excel transparente con las finanzas y el plan seguro de la venta de comida para recuperar la confianza.", destino: "evaluacion", puntos: 10 },
                 { texto: "B) Aguantar los insultos en silencio esperando a que se les pase el enojo.", destino: "evaluacion", puntos: 5 },
-                { texto: "C) Mostrarle al salón un archivo de Excel transparente con las finanzas y el plan seguro de la venta de comida para recuperar la confianza.", destino: "evaluacion", puntos: 10 }
+                { texto: "C) Renunciar a ser tesorero, aventarles el dinero y que ellos lo resuelvan.", destino: "evaluacion", puntos: 0 }
             ]
         },
 
@@ -299,7 +300,6 @@
                 boton.classList.add('btn-siguiente');
             } else if (opcion.destino === 'evaluacion') {
                  boton.onclick = () => procesarDecision(opcion);
-                 // Opcional: darle un estilo distinto al último botón
             }
 
             boton.onclick = () => procesarDecision(opcion);
