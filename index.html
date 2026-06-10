@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratorio de Decisiones - Orientación Educativa</title>
+    <title>Evaluación de Pensamiento Analítico</title>
     <style>
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: #f0f2f5;
-            color: #2b2d42;
+            background-color: #f4f6f9;
+            color: #333;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -20,89 +20,82 @@
         #contenedor-juego {
             background-color: #ffffff;
             padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
-            max-width: 750px;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            max-width: 700px;
             width: 100%;
         }
         header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 3px solid #edf2f4;
+            border-bottom: 2px solid #e9ecef;
             padding-bottom: 15px;
             margin-bottom: 25px;
         }
         h1 {
             margin: 0;
-            font-size: 22px;
-            color: #1a535c;
+            font-size: 20px;
+            color: #2c3e50;
         }
         #marcador {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: bold;
-            color: #ffffff;
-            background-color: #1a535c;
-            padding: 8px 15px;
-            border-radius: 8px;
+            color: #fff;
+            background-color: #34495e;
+            padding: 8px 16px;
+            border-radius: 20px;
+        }
+        .etiqueta-situacion {
+            font-size: 14px;
+            color: #e67e22;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: bold;
+            margin-bottom: 5px;
+            display: block;
         }
         h2 {
-            color: #d62828;
+            color: #2c3e50;
             margin-top: 0;
+            font-size: 24px;
         }
         p {
             font-size: 17px;
             line-height: 1.6;
             margin-bottom: 30px;
+            color: #4f5b66;
         }
         button {
             display: block;
             width: 100%;
-            padding: 16px;
+            padding: 15px;
             margin: 12px 0;
-            background-color: #f8f9fa;
-            color: #2b2d42;
-            border: 2px solid #ced4da;
-            border-radius: 10px;
+            background-color: #fff;
+            color: #2c3e50;
+            border: 2px solid #bdc3c7;
+            border-radius: 8px;
             cursor: pointer;
             font-size: 16px;
             text-align: left;
             transition: all 0.2s ease;
-            font-weight: 500;
         }
         button:hover {
-            background-color: #edf2f4;
-            border-color: #8d99ae;
-            transform: translateY(-2px);
+            background-color: #f8f9fa;
+            border-color: #34495e;
+            transform: translateX(5px);
         }
-        .btn-menu {
-            background-color: #e0fbfc;
-            border-color: #98c1d9;
-            color: #000;
-        }
-        .btn-menu:hover {
-            background-color: #98c1d9;
-        }
-        .btn-completado {
-            background-color: #e9ecef;
-            color: #adb5bd;
-            border-color: #dee2e6;
-            cursor: not-allowed;
-            text-decoration: line-through;
-        }
-        .btn-completado:hover {
-            transform: none;
-            background-color: #e9ecef;
-        }
-        .btn-reinicio {
-            background-color: #d62828;
+        .btn-siguiente {
+            background-color: #3498db;
             color: white;
             border: none;
             text-align: center;
             font-weight: bold;
+            margin-top: 20px;
         }
-        .btn-reinicio:hover {
-            background-color: #c1121f;
+        .btn-siguiente:hover {
+            background-color: #2980b9;
+            transform: none;
         }
     </style>
 </head>
@@ -110,123 +103,161 @@
 
 <div id="contenedor-juego">
     <header>
-        <h1>Pensamiento Analítico en la Prepa</h1>
+        <h1>Orientación Educativa</h1>
         <div id="marcador">Puntos: 0</div>
     </header>
     
+    <span id="etiqueta-situacion" class="etiqueta-situacion"></span>
     <h2 id="titulo-escenario">Cargando...</h2>
-    <p id="texto-escenario">Preparando los sistemas...</p>
+    <p id="texto-escenario">Preparando los módulos...</p>
     
     <div id="botones-opciones">
-        <!-- Los botones se generarán dinámicamente aquí -->
-    </div>
+        </div>
 </div>
 
 <script>
-    // Sistema de puntuación y progreso
     let puntuacionActual = 0;
-    const puntuacionMaxima = 50; 
-    let misionesCompletadas = []; 
+    const puntuacionMaxima = 100; // 5 situaciones x 2 preguntas x 10 puntos
 
-    // Base de datos de los escenarios
+    // Base de datos de escenarios estructurada secuencialmente
     const escenarios = {
-        pantalla_inicio: {
-            titulo: "Bienvenido al Laboratorio de Decisiones",
-            texto: "En la preparatoria, cada decisión cuenta. A continuación, te enfrentarás a 5 situaciones comunes de la vida estudiantil. Lee con cuidado, analiza las consecuencias a corto y largo plazo de cada opción, y elige la que consideres más inteligente. \n\nTienes 50 puntos posibles.",
-            opciones: [ { texto: "Comenzar el análisis", destino: "hub_principal", puntos: 0 } ]
+        inicio: {
+            etiqueta: "Instrucciones",
+            titulo: "Análisis de Casos Prácticos",
+            texto: "Te enfrentarás a 5 situaciones de la vida en preparatoria. Cada situación tiene múltiples decisiones que debes tomar en cadena. Lee con cuidado, analiza y elige la mejor opción.\n\nPuntaje máximo: 100 puntos.",
+            opciones: [ { texto: "Iniciar el primer caso", destino: "sit1_q1", puntos: 0 } ]
         },
 
-        // RESULTADOS GENÉRICOS (Reutilizables para volver al menú)
-        resultado_excelente: {
-            titulo: "Análisis Óptimo (10 pts)",
-            texto: "Lograste ver más allá del problema inmediato. Evaluaste los recursos, las emociones de los involucrados y elegiste la opción que resuelve la causa de raíz sin crear nuevos conflictos.",
-            opciones: [ { texto: "Volver al Menú de Situaciones", destino: "hub_principal", puntos: 0 } ]
-        },
-        resultado_regular: {
-            titulo: "Análisis Parcial (5 pts)",
-            texto: "Tu decisión resuelve el problema por ahora, pero asume un costo innecesario (como sacrificar tu propio tiempo o evadir el conflicto). Atacaste el síntoma, pero no la causa.",
-            opciones: [ { texto: "Volver al Menú de Situaciones", destino: "hub_principal", puntos: 0 } ]
-        },
-        resultado_pobre: {
-            titulo: "Decisión Impulsiva (0 pts)",
-            texto: "Actuaste basado en la emoción o en la gratificación inmediata. Esta decisión crea un problema mayor a largo plazo. Recuerda pausar y pensar antes de reaccionar.",
-            opciones: [ { texto: "Volver al Menú de Situaciones", destino: "hub_principal", puntos: 0 } ]
-        },
-
-        // --- SITUACIÓN 1 ---
-        sit1_conflicto: {
-            titulo: "Situación 1: El Proyecto Grupal",
-            texto: "Es casi medianoche y el proyecto final de Química se entrega mañana. Un integrante de tu equipo acaba de avisar que no hizo su parte porque 'se le olvidó'. El documento está incompleto. ¿Qué haces?",
+        // --- SITUACIÓN 1: TRABAJO EN EQUIPO ---
+        sit1_q1: {
+            etiqueta: "Situación 1: Parte 1",
+            titulo: "El Proyecto Incompleto",
+            texto: "Es medianoche y el proyecto de Biología se entrega mañana. Un integrante acaba de avisar que 'se le olvidó' hacer su parte. ¿Qué decides hacer en este momento?",
             opciones: [
-                { texto: "A) Enojarse, sacarlo del equipo y borrar su nombre sin avisar al profesor.", destino: "resultado_pobre", puntos: 0, completa: 'sit1' },
-                { texto: "B) Quedarte despierto hasta las 4 AM haciendo su parte para no afectar la calificación de nadie.", destino: "resultado_regular", puntos: 5, completa: 'sit1' },
-                { texto: "C) Repartir su parte entre los demás para terminar rápido, pero entregar mañana un reporte al profesor explicando la situación con evidencia.", destino: "resultado_excelente", puntos: 10, completa: 'sit1' }
+                { texto: "A) Enojarse en el grupo de WhatsApp y sacarlo del equipo inmediatamente.", destino: "sit1_q2", puntos: 0 },
+                { texto: "B) Quedarte despierto hasta las 4 AM haciendo su parte para que el equipo no repruebe.", destino: "sit1_q2", puntos: 5 },
+                { texto: "C) Repartir su parte entre los demás para acabar rápido, pero acordar reportarlo al profesor mañana.", destino: "sit1_q2", puntos: 10 }
+            ]
+        },
+        sit1_q2: {
+            etiqueta: "Situación 1: Parte 2",
+            titulo: "El Día de la Presentación",
+            texto: "Al día siguiente, llega el momento de exponer. El profesor hace una pregunta específica sobre la parte que le tocaba a tu compañero ausente. ¿Cómo respondes?",
+            opciones: [
+                { texto: "A) Quedarte callado y dejar que el profesor asuma que nadie estudió.", destino: "sit2_q1", puntos: 0 },
+                { texto: "B) Inventar una respuesta rápida para salir del paso aunque no tenga sentido.", destino: "sit2_q1", puntos: 5 },
+                { texto: "C) Admitir profesionalmente que esa sección tuvo problemas de asignación, pero explicar lo que lograron investigar anoche.", destino: "sit2_q1", puntos: 10 }
             ]
         },
 
-        // --- SITUACIÓN 2 ---
-        sit2_rumor: {
-            titulo: "Situación 2: El Rumor en Redes",
-            texto: "Ves una captura de pantalla circulando en el grupo de WhatsApp del salón donde acusan a un amigo tuyo de hacer trampa en un examen importante. ¿Cómo procesas esta información?",
+        // --- SITUACIÓN 2: REDES SOCIALES ---
+        sit2_q1: {
+            etiqueta: "Situación 2: Parte 1",
+            titulo: "El Rumor Viral",
+            texto: "Ves una captura en un grupo de WhatsApp donde acusan a tu mejor amigo de hacer trampa en matemáticas. ¿Cuál es tu primera acción analítica?",
             opciones: [
-                { texto: "A) Reenviarlo a otro grupo para preguntar si alguien sabe si es verdad.", destino: "resultado_pobre", puntos: 0, completa: 'sit2' },
-                { texto: "B) Ignorarlo por completo para no meterte en problemas.", destino: "resultado_regular", puntos: 5, completa: 'sit2' },
-                { texto: "C) Contactar a tu amigo en privado para verificar el origen del mensaje antes de formarte una opinión o reaccionar.", destino: "resultado_excelente", puntos: 10, completa: 'sit2' }
+                { texto: "A) Reenviar la foto a otros amigos para ver si ellos saben algo.", destino: "sit2_q2", puntos: 0 },
+                { texto: "B) Ignorar el mensaje para no meterte en problemas ajenos.", destino: "sit2_q2", puntos: 5 },
+                { texto: "C) Escribirle a tu amigo por privado para escuchar su versión antes de juzgar.", destino: "sit2_q2", puntos: 10 }
+            ]
+        },
+        sit2_q2: {
+            etiqueta: "Situación 2: Parte 2",
+            titulo: "La Confrontación",
+            texto: "Resulta que el rumor es falso. Tu amigo está furioso y quiere ir a pelear a la salida con quien envió la captura. ¿Cómo manejas esta crisis?",
+            opciones: [
+                { texto: "A) Apoyarlo e ir con él a la salida para que no vaya solo.", destino: "sit3_q1", puntos: 0 },
+                { texto: "B) Decirle que se calme y simplemente irte a tu casa.", destino: "sit3_q1", puntos: 5 },
+                { texto: "C) Convencerlo de llevar las pruebas de su inocencia a Orientación Educativa para resolverlo formalmente.", destino: "sit3_q1", puntos: 10 }
             ]
         },
 
-        // --- SITUACIÓN 3 ---
-        sit3_carrera: {
-            titulo: "Situación 3: Presión Vocacional",
-            texto: "Tienes que elegir área para 3er año. Te apasiona el diseño gráfico y tienes talento, pero tus padres insisten fuertemente en que elijas el área de físico-matemáticas porque 'las artes no dejan dinero'.",
+        // --- SITUACIÓN 3: VOCACIÓN ---
+        sit3_q1: {
+            etiqueta: "Situación 3: Parte 1",
+            titulo: "Elección de Área",
+            texto: "Tus padres quieren que elijas el área Físico-Matemática porque 'es lo que deja dinero', pero tú tienes una fuerte vocación por las Artes Visuales.",
             opciones: [
-                { texto: "A) Elegir físico-matemáticas para evitar un conflicto familiar constante.", destino: "resultado_pobre", puntos: 0, completa: 'sit3' },
-                { texto: "B) Elegir artes, no decirles nada hasta que se enteren por la escuela y rebelarte.", destino: "resultado_regular", puntos: 5, completa: 'sit3' },
-                { texto: "C) Investigar carreras universitarias que combinen ambas áreas (ej. Animación 3D, Arquitectura) e iniciar una negociación con datos reales.", destino: "resultado_excelente", puntos: 10, completa: 'sit3' }
+                { texto: "A) Elegir Físico-Matemático para evitar que te regañen en casa.", destino: "sit3_q2", puntos: 0 },
+                { texto: "B) Elegir Artes y ocultarles la hoja de inscripción hasta que ya no haya vuelta atrás.", destino: "sit3_q2", puntos: 5 },
+                { texto: "C) Buscar carreras que combinen ambos intereses (ej. Animación Digital) y presentarles un plan de estudios.", destino: "sit3_q2", puntos: 10 }
+            ]
+        },
+        sit3_q2: {
+            etiqueta: "Situación 3: Parte 2",
+            titulo: "La Presión del Orientador",
+            texto: "El orientador te dice que las áreas de Artes se están llenando y debes firmar hoy mismo, pero aún no has hablado con tus padres. ¿Qué haces?",
+            opciones: [
+                { texto: "A) Firmar rápido por pánico y luego ver cómo le explicas a tus papás.", destino: "sit4_q1", puntos: 0 },
+                { texto: "B) Falsificar la firma de tus papás para asegurar tu lugar en Artes.", destino: "sit4_q1", puntos: 0 },
+                { texto: "C) Pedirle al orientador una extensión de 24 horas y agendar una cita de urgencia entre él, tus padres y tú.", destino: "sit4_q1", puntos: 10 }
             ]
         },
 
-        // --- SITUACIÓN 4 ---
-        sit4_tiempo: {
-            titulo: "Situación 4: Saturación de Tiempo",
-            texto: "Es jueves. Mañana tienes un examen pesado de Historia, pero también hay una fiesta importante hoy a la que irán todos tus amigos. Estás dudando.",
+        // --- SITUACIÓN 4: GESTIÓN DE TIEMPO ---
+        sit4_q1: {
+            etiqueta: "Situación 4: Parte 1",
+            titulo: "Fiesta vs Examen",
+            texto: "Es jueves en la tarde. Tienes un examen vital de Historia mañana temprano, pero el chico/chica que te gusta te invitó a una fiesta hoy.",
             opciones: [
-                { texto: "A) Ir a la fiesta y confiar en que lo que leíste en clase será suficiente para pasar.", destino: "resultado_pobre", puntos: 0, completa: 'sit4' },
-                { texto: "B) Cancelar la fiesta, encerrarte a estudiar toda la noche con frustración.", destino: "resultado_regular", puntos: 5, completa: 'sit4' },
-                { texto: "C) Estudiar intensamente 2 horas usando la técnica Pomodoro, e ir a la fiesta solo un rato como recompensa, regresando temprano.", destino: "resultado_excelente", puntos: 10, completa: 'sit4' }
+                { texto: "A) Ir a la fiesta y confiar en que podrás improvisar en el examen.", destino: "sit4_q2", puntos: 0 },
+                { texto: "B) Quedarte a estudiar, pero pasar toda la noche distraído en el celular lamentando no haber ido.", destino: "sit4_q2", puntos: 5 },
+                { texto: "C) Aplicar la técnica Pomodoro para estudiar intensamente 3 horas, ir a la fiesta un rato y regresar temprano.", destino: "sit4_q2", puntos: 10 }
+            ]
+        },
+        sit4_q2: {
+            etiqueta: "Situación 4: Parte 2",
+            titulo: "La Pregunta Sorpresa",
+            texto: "Estás en el examen de Historia y la última pregunta vale 30% de la calificación. Es sobre un tema que el profesor mencionó, pero no venía en el libro.",
+            opciones: [
+                { texto: "A) Intentar copiarle discretamente al compañero de al lado.", destino: "sit5_q1", puntos: 0 },
+                { texto: "B) Dejarla en blanco y entregar el examen rápido para salir ya.", destino: "sit5_q1", puntos: 5 },
+                { texto: "C) Escribir todo lo que recuerdas del contexto histórico e intentar deducir una respuesta lógica.", destino: "sit5_q1", puntos: 10 }
             ]
         },
 
-        // --- SITUACIÓN 5 ---
-        sit5_finanzas: {
-            titulo: "Situación 5: Tesorería del Salón",
-            texto: "Eres el encargado del dinero para el viaje de fin de curso. Faltan $3,000 pesos para la meta y se acaba el tiempo. Un compañero te sugiere apostar una parte del fondo en una app de deportes 'segura' para duplicarlo rápido.",
+        // --- SITUACIÓN 5: PRESIÓN DE PARES ---
+        sit5_q1: {
+            etiqueta: "Situación 5: Parte 1",
+            titulo: "La Tesorería del Salón",
+            texto: "Eres el tesorero. Faltan $2,000 pesos para el viaje de graduación. Un compañero popular sugiere meter el dinero en una app de apuestas deportivas para 'duplicarlo rápido'.",
             opciones: [
-                { texto: "A) Apostar una pequeña parte. Si se pierde, lo repones tú mismo poco a poco.", destino: "resultado_pobre", puntos: 0, completa: 'sit5' },
-                { texto: "B) Negarte rotundamente y poner dinero de tu propio ahorro para que el grupo no se estrese.", destino: "resultado_regular", puntos: 5, completa: 'sit5' },
-                { texto: "C) Rechazar la apuesta por el alto riesgo y proponer organizar una rifa relámpago con un margen de ganancia calculado matemáticamente.", destino: "resultado_excelente", puntos: 10, completa: 'sit5' }
+                { texto: "A) Aceptar para no quedar como 'aburrido' frente al salón.", destino: "sit5_q2", puntos: 0 },
+                { texto: "B) Negarte, pero poner de tus propios ahorros lo que falta para que dejen de molestar.", destino: "sit5_q2", puntos: 5 },
+                { texto: "C) Rechazar la idea con firmeza explicando el riesgo matemático y proponer organizar una venta de comida.", destino: "sit5_q2", puntos: 10 }
+            ]
+        },
+        sit5_q2: {
+            etiqueta: "Situación 5: Parte 2",
+            titulo: "El Boicot",
+            texto: "Como no quisiste apostar, el grupo de compañeros se enoja y empieza a decir que el viaje fracasará por tu culpa, poniéndote al salón en contra.",
+            opciones: [
+                { texto: "A) Renunciar a ser tesorero, aventarles el dinero y que ellos lo resuelvan.", destino: "evaluacion", puntos: 0 },
+                { texto: "B) Aguantar los insultos en silencio esperando a que se les pase el enojo.", destino: "evaluacion", puntos: 5 },
+                { texto: "C) Mostrarle al salón un archivo de Excel transparente con las finanzas y el plan seguro de la venta de comida para recuperar la confianza.", destino: "evaluacion", puntos: 10 }
             ]
         },
 
         // --- EVALUACIÓN FINAL ---
-        evaluacion_final: {
-            titulo: "Diagnóstico de Pensamiento Analítico",
-            texto: "Calculando tu perfil basado en tus 5 decisiones...",
-            opciones: [ { texto: "Volver a jugar", destino: "reinicio_total", puntos: 0 } ]
+        evaluacion: {
+            etiqueta: "Resultados",
+            titulo: "Perfil Analítico Completado",
+            texto: "Calculando tus resultados...",
+            opciones: [ { texto: "Volver a iniciar", destino: "inicio", puntos: 0 } ]
         }
     };
 
     // Referencias al DOM
     const elementoTexto = document.getElementById('texto-escenario');
     const elementoTitulo = document.getElementById('titulo-escenario');
+    const elementoEtiqueta = document.getElementById('etiqueta-situacion');
     const elementoBotones = document.getElementById('botones-opciones');
     const marcador = document.getElementById('marcador');
 
     function iniciarJuego() {
         puntuacionActual = 0;
-        misionesCompletadas = [];
         actualizarMarcador();
-        mostrarEscenario('pantalla_inicio');
+        mostrarEscenario('inicio');
     }
 
     function actualizarMarcador() {
@@ -234,93 +265,54 @@
     }
 
     function mostrarEscenario(idEscenario) {
-        // Manejo especial para reiniciar todo el juego
-        if (idEscenario === 'reinicio_total') {
+        if (idEscenario === 'inicio' && puntuacionActual > 0) {
             iniciarJuego();
             return;
         }
 
-        // LÓGICA DEL MENÚ CENTRAL (HUB)
-        if (idEscenario === 'hub_principal') {
-            if (misionesCompletadas.length === 5) {
-                mostrarEscenario('evaluacion_final');
-                return;
-            }
-
-            elementoTitulo.innerText = "Selecciona una Situación";
-            elementoTexto.innerText = `Has completado ${misionesCompletadas.length} de 5 situaciones. ¿A qué reto te enfrentarás ahora?`;
-            elementoBotones.innerHTML = '';
-
-            const misionesMenu = [
-                { id: 'sit1_conflicto', nombre: "1. El Proyecto Grupal" },
-                { id: 'sit2_rumor', nombre: "2. El Rumor en Redes" },
-                { id: 'sit3_carrera', nombre: "3. Presión Vocacional" },
-                { id: 'sit4_tiempo', nombre: "4. Saturación de Tiempo" },
-                { id: 'sit5_finanzas', nombre: "5. Tesorería del Salón" }
-            ];
-
-            misionesMenu.forEach(mision => {
-                const boton = document.createElement('button');
-                boton.innerText = mision.nombre;
-                
-                if (misionesCompletadas.includes(mision.id)) {
-                    boton.classList.add('btn-completado');
-                    boton.disabled = true;
-                    boton.innerText += " (Completado)";
-                } else {
-                    boton.classList.add('btn-menu');
-                    boton.onclick = () => mostrarEscenario(mision.id);
-                }
-                elementoBotones.appendChild(boton);
-            });
-            return;
-        }
-
-        // LÓGICA NORMAL PARA ESCENARIOS
         const escenarioActual = escenarios[idEscenario];
+        
+        elementoEtiqueta.innerText = escenarioActual.etiqueta;
         elementoTitulo.innerText = escenarioActual.titulo;
         
-        // Manejo especial del nodo de evaluación
-        if (idEscenario === 'evaluacion_final') {
+        if (idEscenario === 'evaluacion') {
             let diagnostico = "";
-            if (puntuacionActual >= 45) {
-                diagnostico = "Rango: PENSADOR ESTRATÉGICO. Eres maduro al tomar decisiones. Evalúas el panorama completo, priorizas consecuencias a largo plazo y no te dejas llevar por impulsos. Estás muy preparado para los retos universitarios.";
-            } else if (puntuacionActual >= 25) {
-                diagnostico = "Rango: ANALISTA EN DESARROLLO. Tomas buenas decisiones generales, pero a veces tiendes a evitar conflictos a expensas de tu propio tiempo o esfuerzo. Recuerda que el pensamiento analítico también sirve para defender tus límites con argumentos.";
+            if (puntuacionActual >= 85) {
+                diagnostico = "Nivel: PENSADOR ESTRATÉGICO.\nSobresaliente. Analizas las situaciones a profundidad, no cedes ante la presión social y buscas soluciones lógicas que benefician a todos a largo plazo.";
+            } else if (puntuacionActual >= 55) {
+                diagnostico = "Nivel: EN DESARROLLO.\nTienes buenas intenciones y logras evitar catástrofes, pero a menudo eliges la salida fácil o evades el conflicto en lugar de resolverlo de raíz.";
             } else {
-                diagnostico = "Rango: REACTIVO / IMPULSIVO. Tu toma de decisiones se basa en resolver el problema inmediato lo más rápido posible, o de forma emocional. En Orientación Educativa trabajaremos en pausar, evaluar opciones y anticipar riesgos.";
+                diagnostico = "Nivel: IMPULSIVO.\nTus decisiones son altamente emocionales o reactivas. Necesitas aprender a pausar, respirar y evaluar las consecuencias de tus actos antes de reaccionar.";
             }
             elementoTexto.innerText = `Puntaje final: ${puntuacionActual} de ${puntuacionMaxima}\n\n${diagnostico}`;
         } else {
             elementoTexto.innerText = escenarioActual.texto;
         }
         
-        // Renderizar opciones
         elementoBotones.innerHTML = '';
+        
         escenarioActual.opciones.forEach(opcion => {
             const boton = document.createElement('button');
             boton.innerText = opcion.texto;
             
-            if (idEscenario === 'evaluacion_final') {
-                boton.classList.add('btn-reinicio');
+            if (idEscenario === 'evaluacion') {
+                boton.classList.add('btn-siguiente');
+            } else if (opcion.destino === 'evaluacion') {
+                 boton.onclick = () => procesarDecision(opcion);
+                 // Opcional: darle un estilo distinto al último botón
             }
 
-            boton.onclick = () => {
-                // Sumar puntos
-                if (opcion.puntos > 0) {
-                    puntuacionActual += opcion.puntos;
-                    actualizarMarcador();
-                }
-                // Registrar misión completada si la opción tiene el flag
-                if (opcion.completa) {
-                    // Mapeamos el código (sit1) al ID real (sit1_conflicto) para bloquear el botón en el menú
-                    const mapaId = { sit1: 'sit1_conflicto', sit2: 'sit2_rumor', sit3: 'sit3_carrera', sit4: 'sit4_tiempo', sit5: 'sit5_finanzas' };
-                    misionesCompletadas.push(mapaId[opcion.completa]);
-                }
-                mostrarEscenario(opcion.destino);
-            };
+            boton.onclick = () => procesarDecision(opcion);
             elementoBotones.appendChild(boton);
         });
+    }
+
+    function procesarDecision(opcion) {
+        if (opcion.puntos > 0) {
+            puntuacionActual += opcion.puntos;
+            actualizarMarcador();
+        }
+        mostrarEscenario(opcion.destino);
     }
 
     iniciarJuego();
